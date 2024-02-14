@@ -1,37 +1,24 @@
-# TON Solutions Telemetree library for React.js
-
-## Installation
-
-Install it from [NPM](https://www.npmjs.com/package/@tonsolutions/telemetree-react):
-```
-$ npm install @tonsolutions/telemetree-react
-```
+# TON Solutions Telemetree Pixel
 
 ## How to use
-```javascript
-import { TwaAnalyticsProvider } from '@tonsolutions/telemetree-react';
-
-export function App() {
-    return (
-        <TwaAnalyticsProvider
-            projectId='YOUR_PROJECT_ID'
-            apiKey='YOUR_API_KEY'
-            appName='YOUR_APPLICATION_NAME'
-        >
-        ...
-        </TwaAnalyticsProvider>
-    );
-}
+```html
+<script src="/telemetree-pixel.js"></script>
+<script>
+    const telemetreeBuilder = telemetree({
+        projectId: "YOUR_PROJECT_ID",
+        apiKey: "YOUR_API_KEY",
+        appName: "YOUR_APPLICATION_NAME"
+    });
+</script>
 ```
 
-```js
-import { useTWAEvent } from '@tonsolutions/telemetree-react';
-
-const builder = useTWAEvent();
-builder.track('transfer', {
-    amount: 1000,
-    method: 'TON',
-});
+```html
+<script>
+    telemetreeBuilder.track('transfer', {
+        amount: 1000,
+        method: 'TON',
+    });
+</script>
 ```
 
 ## User data and Processing
