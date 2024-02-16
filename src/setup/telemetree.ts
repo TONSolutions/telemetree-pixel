@@ -2,6 +2,9 @@ import { EventBuilder } from '../builders';
 import { loadTelegramWebAppData, webViewHandler } from '../telegram/telegram';
 import { TonConnectStorageData } from '../models/tonconnect-storage-data';
 import { EventType } from '../enum/event-type.enum';
+import { getCurrentUTCTimestampMilliseconds } from '../helpers/date.helper';
+import { getLocalStorage, setLocalStorage } from '../utils/local-storage';
+import { generateRandomId } from '../utils/id';
 
 const TonConnectLocalStorageKey = 'ton-connect-storage_bridge-connection';
 const TonConnectProviderNameLocalStorageKey = 'ton-connect-ui_preferred-wallet';
@@ -19,14 +22,41 @@ const telemetree = (options: any) => {
     throw new Error('TWA Analytics Provider: Missing projectId');
   }
 
-  const telegramWebAppData = loadTelegramWebAppData();
+  let eventBuilder: EventBuilder;
+  if (!options.isTelegramContext) {
+    let id: string | null = getLocalStorage('telemetree.id');
+    if (id === null) {
+      id = generateRandomId().toString();
+      setLocalStorage('telemetree.id', id);
+    }
 
-  const eventBuilder = new EventBuilder(
-    options.projectId,
-    options.apiKey,
-    options.appName,
-    telegramWebAppData,
-  );
+    eventBuilder = new EventBuilder(
+      options.projectId,
+      options.apiKey,
+      options.appName,
+      {
+        auth_date: +getCurrentUTCTimestampMilliseconds(),
+        hash: '',
+        user: {
+          id: +id,
+          first_name: id,
+          username: '',
+          last_name: '',
+          language_code: '',
+          is_premium: false,
+        },
+        platform: 'web',
+      },
+    );
+  } else {
+    const telegramWebAppData = loadTelegramWebAppData();
+    eventBuilder = new EventBuilder(
+      options.projectId,
+      options.apiKey,
+      options.appName,
+      telegramWebAppData,
+    );
+  }
 
   webViewHandler?.onEvent('main_button_pressed', (event: string) => {
     eventBuilder.track(EventType.MainButtonPressed, {});

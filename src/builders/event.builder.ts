@@ -21,6 +21,7 @@ export class EventBuilder implements IEventBuilder {
   protected transport: Transport | null = null;
   protected config: TwaAnalyticsConfig | null = null;
   protected sessionIdentifier: string | null = null;
+  protected userIdentifier: string | null = null;
   protected readonly pushHandler: EventPushHandler = new EventPushHandler(this);
 
   constructor(
@@ -34,6 +35,11 @@ export class EventBuilder implements IEventBuilder {
 
   public setSessionIdentifier(sessionIdentifier: string): this {
     this.sessionIdentifier = sessionIdentifier;
+    return this;
+  }
+
+  public setUserId(userIdentifier: string): this {
+    this.userIdentifier = userIdentifier;
     return this;
   }
 
