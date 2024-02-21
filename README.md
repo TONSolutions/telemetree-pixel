@@ -2,12 +2,13 @@
 
 ## How to use
 ```html
-<script src="/telemetree-pixel.js"></script>
+<script src="https://cdn.ton.solutions/telemetree-pixel.js"></script>
 <script>
     const telemetreeBuilder = telemetree({
         projectId: "YOUR_PROJECT_ID",
         apiKey: "YOUR_API_KEY",
-        appName: "YOUR_APPLICATION_NAME"
+        appName: "YOUR_APPLICATION_NAME",
+        isTelegramContext: true, // use false, if a website is not in Telegram Web App context
     });
 </script>
 ```
