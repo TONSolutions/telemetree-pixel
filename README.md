@@ -2,7 +2,7 @@
 
 ![](https://tc-images-api.s3.eu-central-1.amazonaws.com/gif_cropped.gif)
 
-Welcome to Telemetree Pixel, the dedicated solution for integrating powerful analytics into your Telegram Mini Apps or websites. Pixel is easy to implement and it provides  real-time insights into how users interact with your application.
+**Welcome to Telemetree Pixel, the dedicated solution for integrating powerful analytics into your Telegram Mini Apps or websites. Pixel is easy to implement and it provides  real-time insights into how users interact with your application.**
 
 The vanilla Javascript library collects events as effeciently as the [Telemetree React SDK](https://docs.ton.solutions/docs/frontend-sdk) while being framework agnostic.
 
@@ -42,14 +42,15 @@ That's it! Now you can add custom events with `telemetreeBuilder.track` function
 
 Default set of events like pageload is automatically tracked and collected by the library and you don't need to specifically wrap those unless you want custom data to be collected on such actions.
 
-### Quick tips
-
-- You can use [Telemetree React SDK](https://docs.ton.solutions/docs/frontend-sdk) and Telemetree Pixel simultaniously in your app if for some reason you have to. Just make sure to avoid data duplication problems.
-- The Pixel is a more lightweight solution compared to the [React SDK](https://docs.ton.solutions/docs/frontend-sdk) but it's also a more generic solution. If your app is React based consider an SDK first approach.
+> [!TIP]
+> You can use [Telemetree React SDK](https://docs.ton.solutions/docs/frontend-sdk) and Telemetree Pixel simultaniously in your app if for some reason you have to. Just make sure to avoid data duplication problems.
 
 ## User data and Processing
 
 Adhering to Telegram's high standards of security, we employ RSA encryption for the transmission of data across networks, ensuring both the integrity and safety of your analytics processes. You can learn more in the dedicated section of our official [Documentation](https://docs.ton.solutions/docs/data-encryption).
+
+> [!NOTE]
+> The Pixel is a more lightweight solution compared to the [React SDK](https://docs.ton.solutions/docs/frontend-sdk) but it's also a more generic solution. If your app is React based consider an SDK first approach.
 
 ## Debugging
 - Use browser developer tools to monitor network requests and confirm that events are being sent to Telemetree.
