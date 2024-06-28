@@ -12,14 +12,15 @@ There is only one really: a web application that can run Javascript.
 
 ## Setup
 
-Place this script before the closing `<head>` tag in your tempate or call it accordingly to your framework of choice practices:
+Place these scripts before the closing `<head>` tag in your tempate or call it accordingly to your framework of choice practices:
 ```html
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/TONSolutions/telemetree-pixel@main/telemetree-pixel.js"></script>
 ```
 
 And inside the `<body>` initialise Telemetree with your credentials like so:
 
-```
+```javascript
 <script>
     const telemetreeBuilder = telemetree({
         projectId: "YOUR_PROJECT_ID",
