@@ -6,6 +6,8 @@
 
 The vanilla Javascript library collects events as effeciently as the [Telemetree React SDK](https://docs.telemetree.io/sdks/react) while being framework agnostic.
 
+![Alt](https://repobeats.axiom.co/api/embed/c308ebe7936f3509b3d1afe88cc18eb64ef138c9.svg "Repobeats analytics image")
+
 ## Requirements
 
 There is only one really: a web application that can run Javascript.
