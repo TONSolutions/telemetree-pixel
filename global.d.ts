@@ -1,4 +1,4 @@
-import { Telegram } from "./src/telegram";
+import { Telegram } from './src/telegram';
 
 declare global {
   interface Window {
@@ -6,5 +6,6 @@ declare global {
       WebApp: Telegram.WebApp;
       WebView: Telegram.WebView;
     };
+    __telemetreeSessionStarted?: boolean;
   }
 }

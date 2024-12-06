@@ -31,4 +31,10 @@ export enum EventType {
   GyroscropeStopped = 'GyroscropeStopped',
   GyroscropeChanged = 'GyroscropeChanged',
   GyroscropeFailed = 'GyroscropeFailed',
+  WebAppRequestFullscreen = 'Fullscreen on',
+  WebAppExitFullscreen = 'Fullscreen off',
+  SwitchInlineQuery = 'Inline query opened',
+  ShareToStory = 'Story shared',
+  SessionStart = 'Session start',
+  SessionEnd = 'Session end',
 }

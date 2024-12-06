@@ -1,5 +1,9 @@
 import { EventBuilder } from '../builders';
-import { loadTelegramWebAppData, webViewHandler } from '../telegram/telegram';
+import {
+  loadTelegramWebAppData,
+  webViewHandler,
+  webAppHandler, // Add this import
+} from '../telegram/telegram';
 import { TonConnectStorageData } from '../models/tonconnect-storage-data';
 import { EventType } from '../enum/event-type.enum';
 import { getCurrentUTCTimestampMilliseconds } from '../helpers/date.helper';
@@ -70,47 +74,62 @@ const telemetree = (options: any) => {
     eventBuilder.track(EventType.BackButtonPressed, {});
   });
 
-  webViewHandler?.onEvent('secondary_button_pressed', (event: string, data?: object) => {
-    eventBuilder.track(EventType.SecondaryButtonPressed, {
-      ...data,
-    });
-  });
+  webViewHandler?.onEvent(
+    'secondary_button_pressed',
+    (event: string, data?: object) => {
+      eventBuilder.track(EventType.SecondaryButtonPressed, {
+        ...data,
+      });
+    },
+  );
 
   webViewHandler?.onEvent('prepared_message_sent', (event: string) => {
     eventBuilder.track(EventType.PreparedMessageSent, {});
   });
 
-  webViewHandler?.onEvent('fullscreen_changed', (event: string, data?: object) => {
-    eventBuilder.track(EventType.FullScreenChanged, {
-      ...data,
-    });
-  });
+  webViewHandler?.onEvent(
+    'fullscreen_changed',
+    (event: string, data?: object) => {
+      eventBuilder.track(EventType.FullScreenChanged, {
+        ...data,
+      });
+    },
+  );
 
   webViewHandler?.onEvent('home_screen_added', (event: string) => {
     eventBuilder.track(EventType.HomeScreenAdded, {});
   });
 
-  webViewHandler?.onEvent('home_screen_checked', (event: string, data?: object) => {
-    eventBuilder.track(EventType.HomeScreenChecked, {
-      ...data,
-    });
-  });
+  webViewHandler?.onEvent(
+    'home_screen_checked',
+    (event: string, data?: object) => {
+      eventBuilder.track(EventType.HomeScreenChecked, {
+        ...data,
+      });
+    },
+  );
 
   webViewHandler?.onEvent('emoji_status_set', (event: string) => {
     eventBuilder.track(EventType.EmojiStatusSet, {});
   });
 
-  webViewHandler?.onEvent('location_checked', (event: string, data?: object) => {
-    eventBuilder.track(EventType.LocationChecked, {
-      ...data,
-    });
-  });
+  webViewHandler?.onEvent(
+    'location_checked',
+    (event: string, data?: object) => {
+      eventBuilder.track(EventType.LocationChecked, {
+        ...data,
+      });
+    },
+  );
 
-  webViewHandler?.onEvent('location_requested', (event: string, data?: object) => {
-    eventBuilder.track(EventType.LocationRequested, {
-      ...data,
-    });
-  });
+  webViewHandler?.onEvent(
+    'location_requested',
+    (event: string, data?: object) => {
+      eventBuilder.track(EventType.LocationRequested, {
+        ...data,
+      });
+    },
+  );
 
   webViewHandler?.onEvent('accelerometer_started', (event: string) => {
     eventBuilder.track(EventType.AccelerometerStarted, {});
@@ -237,6 +256,91 @@ const telemetree = (options: any) => {
       }
     }
   }, 1000);
+
+  if (!window.__telemetreeSessionStarted) {
+    window.__telemetreeSessionStarted = true;
+    eventBuilder.track(EventType.SessionStart, {
+      timestamp: Date.now(),
+    });
+  }
+
+  // Track fullscreen events
+  let lastViewportHeight: number | undefined = webAppHandler?.viewportHeight;
+  let isCurrentlyExpanded = false;
+
+  webAppHandler?.onEvent('viewport_changed', (event: any) => {
+    if (webAppHandler?.viewportHeight === undefined) {
+      return;
+    }
+
+    const heightIncreased =
+      lastViewportHeight !== undefined &&
+      webAppHandler.viewportHeight > lastViewportHeight;
+
+    if (heightIncreased && !isCurrentlyExpanded) {
+      isCurrentlyExpanded = true;
+      eventBuilder.track(EventType.WebAppRequestFullscreen, {
+        timestamp: Date.now(),
+      });
+    } else if (!heightIncreased && isCurrentlyExpanded) {
+      isCurrentlyExpanded = false;
+      eventBuilder.track(EventType.WebAppExitFullscreen, {
+        timestamp: Date.now(),
+      });
+    }
+
+    lastViewportHeight = webAppHandler.viewportHeight;
+  });
+
+  // Track inline query events
+  const originalSwitchInlineQuery = webAppHandler?.switchInlineQuery;
+  if (webAppHandler && originalSwitchInlineQuery) {
+    webAppHandler.switchInlineQuery = (
+      query: string,
+      choose_chat_types?: string[],
+    ) => {
+      eventBuilder.track(EventType.SwitchInlineQuery, {
+        query,
+        chat_types: choose_chat_types,
+        timestamp: Date.now(),
+      });
+      return originalSwitchInlineQuery.call(
+        webAppHandler,
+        query,
+        choose_chat_types,
+      );
+    };
+  }
+
+  // Track share to story events
+  const originalShareToStory = webAppHandler?.shareToStory;
+  if (webAppHandler && originalShareToStory) {
+    webAppHandler.shareToStory = (
+      media_url: string,
+      params?: { text?: string },
+    ) => {
+      eventBuilder.track(EventType.ShareToStory, {
+        media_url,
+        text: params?.text,
+        timestamp: Date.now(),
+      });
+      return originalShareToStory.call(webAppHandler, media_url, params);
+    };
+  }
+
+  // Track close events
+  const originalClose = webAppHandler?.close;
+  if (webAppHandler && originalClose) {
+    webAppHandler.close = () => {
+      eventBuilder.track(EventType.SessionEnd, {
+        timestamp: Date.now(),
+      });
+
+      setTimeout(() => {
+        originalClose.call(webAppHandler);
+      }, 50);
+    };
+  }
 
   return eventBuilder;
 };
