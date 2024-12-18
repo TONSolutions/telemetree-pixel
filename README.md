@@ -1,4 +1,4 @@
-# TON Solutions Telemetree Pixel
+# Telegram Mini App analytics SDK for Vanilla JavaScript
 
 ![](https://tc-images-api.s3.eu-central-1.amazonaws.com/gif_cropped.gif)
 
