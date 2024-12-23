@@ -31,4 +31,36 @@ export enum EventType {
   GyroscropeStopped = 'GyroscropeStopped',
   GyroscropeChanged = 'GyroscropeChanged',
   GyroscropeFailed = 'GyroscropeFailed',
+  WebAppRequestFullscreen = 'Fullscreen on',
+  WebAppExitFullscreen = 'Fullscreen off',
+  SwitchInlineQuery = 'Inline query opened',
+  ShareToStory = 'Story shared',
+  SessionStart = 'Session start',
+  SessionEnd = 'Session end',
+
+  // Wallet events
+  WalletConnectStarted = 'Wallet connect started',
+  WalletConnected = 'Wallet connected',
+  WalletConnectError = 'Wallet connect error',
+  WalletConnectionRestoringStarted = 'Wallet connection restoring started',
+  WalletConnectionRestored = 'Wallet connection restored',
+  WalletConnectionRestoreError = 'Wallet connection restore error',
+  WalletDisconnected = 'Wallet disconnected',
+  // Transaction events
+  TransactionSentForSignature = 'Transaction sent for signature',
+  TransactionSigned = 'Transaction signed',
+  TransactionSigningFailed = 'Transaction signing failed',
+}
+
+export enum TonConnectEvent {
+  WalletConnectStarted = 'connection-started',
+  WalletConnectSuccess = 'connection-completed',
+  WalletConnectError = 'connection-error',
+  ConnectionRestoringStarted = 'connection-restoring-started',
+  ConnectionRestoringSuccess = 'connection-restoring-completed',
+  ConnectionRestoringError = 'connection-restoring-error',
+  WalletDisconnect = 'disconnection',
+  TransactionSentForSignature = 'transaction-sent-for-signature',
+  TransactionSigned = 'transaction-signed',
+  TransactionSigningFailed = 'transaction-signing-failed',
 }

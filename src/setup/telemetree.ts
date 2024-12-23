@@ -5,6 +5,8 @@ import { EventType } from '../enum/event-type.enum';
 import { getCurrentUTCTimestampMilliseconds } from '../helpers/date.helper';
 import { getLocalStorage, setLocalStorage } from '../utils/local-storage';
 import { generateRandomId } from '../utils/id';
+import {TonConnectObserver} from "../observers/ton-connect.observer";
+import {Logger} from "../utils/logger";
 
 const TonConnectLocalStorageKey = 'ton-connect-storage_bridge-connection';
 const TonConnectProviderNameLocalStorageKey = 'ton-connect-ui_preferred-wallet';
@@ -237,6 +239,16 @@ const telemetree = (options: any) => {
       }
     }
   }, 1000);
+
+  let observer: TonConnectObserver | null = null;
+  try {
+    observer = new TonConnectObserver(eventBuilder);
+    Logger.info('TON Connect observer initialized successfully');
+  } catch (error) {
+    Logger.error('Failed to initialize TON Connect observer', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
 
   return eventBuilder;
 };

@@ -18,11 +18,7 @@ Place these scripts before the closing `<head>` tag in your tempate or call it a
 ```html
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-// For fully compatible version:
 <script src="https://cdn.jsdelivr.net/gh/TONSolutions/telemetree-pixel@main/telemetree-pixel.js"></script>
-
-// Or for the latest version:
-<script src="https://cdn.jsdelivr.net/gh/TONSolutions/telemetree-pixel@dd564d0d80d380b01d0f9a19c4116beb768bacc8/telemetree-pixel.js"></script>
 ```
 
 And inside the `<body>` initialise Telemetree with your credentials like so:
@@ -49,6 +45,8 @@ That's it! Now you can add custom events with `telemetreeBuilder.track` function
 ```
 
 Default set of events like pageload is automatically tracked and collected by the library and you don't need to specifically wrap those unless you want custom data to be collected on such actions.
+
+In order to track TON related operations, such as wallet connections, signed transactions etc, you should use @tonconnect/ui or @tonconnect/ui-react. When these libs are detected, Telemetree will automatically log on-chain events.
 
 > [!TIP]
 > You can use [Telemetree React SDK](https://docs.telemetree.io/sdks/react) and Telemetree Pixel simultaniously in your app if for some reason you have to. Just make sure to avoid data duplication problems.
