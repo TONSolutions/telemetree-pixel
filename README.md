@@ -50,6 +50,8 @@ That's it! Now you can add custom events with `telemetreeBuilder.track` function
 
 Default set of events like pageload is automatically tracked and collected by the library and you don't need to specifically wrap those unless you want custom data to be collected on such actions.
 
+In order to track TON related operations, such as wallet connections, signed transactions etc, you should use @tonconnect/ui or @tonconnect/ui-react. When these libs are detected, Telemetree will automatically log on-chain events.
+
 > [!TIP]
 > You can use [Telemetree React SDK](https://docs.telemetree.io/sdks/react) and Telemetree Pixel simultaniously in your app if for some reason you have to. Just make sure to avoid data duplication problems.
 
