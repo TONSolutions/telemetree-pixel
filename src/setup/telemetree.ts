@@ -199,6 +199,18 @@ const telemetree = (options: any) => {
     });
   });
 
+  webViewHandler?.onEvent('web_app_request_fullscreen', (event: string) => {
+    eventBuilder.track(EventType.WebAppRequestFullscreen, {
+      timestamp: Date.now(),
+    });
+  });
+
+  webViewHandler?.onEvent('web_app_exit_fullscreen', (event: string) => {
+    eventBuilder.track(EventType.WebAppExitFullscreen, {
+      timestamp: Date.now(),
+    });
+  });
+
   const locationPath = location.pathname;
   eventBuilder.track(`${EventType.PageView} ${locationPath}`, {
     path: locationPath,
