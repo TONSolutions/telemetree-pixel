@@ -7,6 +7,7 @@ import { getLocalStorage, setLocalStorage } from '../utils/local-storage';
 import { generateRandomId } from '../utils/id';
 import {TonConnectObserver} from "../observers/ton-connect.observer";
 import {Logger} from "../utils/logger";
+import { Telegram } from '../telegram';
 
 const TonConnectLocalStorageKey = 'ton-connect-storage_bridge-connection';
 const TonConnectProviderNameLocalStorageKey = 'ton-connect-ui_preferred-wallet';
@@ -18,6 +19,16 @@ export type TwaAnalyticsConfig = {
   auto_capture_classes: string[];
   public_key: string;
 };
+
+declare global {
+  interface Window {
+    Telegram?: {
+      WebApp?: Telegram.WebApp;
+      WebView?: Telegram.WebView;
+    };
+    __telemetreeSessionStarted?: boolean;
+  }
+}
 
 const telemetree = (options: any) => {
   if (!options.projectId) {
@@ -210,6 +221,124 @@ const telemetree = (options: any) => {
       timestamp: Date.now(),
     });
   });
+
+  const webApp = window?.Telegram?.WebApp;
+  if (webApp) {
+    // Track session start and initial page view when WebApp is initialized
+    if (!window.__telemetreeSessionStarted) {
+      window.__telemetreeSessionStarted = true;
+
+      // Track session start
+      eventBuilder.track(EventType.SessionStart, {
+        timestamp: Date.now(),
+        platform: webApp.platform,
+        version: webApp.version,
+        colorScheme: webApp.colorScheme,
+        viewportHeight: webApp.viewportHeight,
+        viewportStableHeight: webApp.viewportStableHeight,
+        isExpanded: webApp.isExpanded,
+      });
+
+      // Track initial page view
+      const locationPath = location.pathname || '/';
+      eventBuilder.track(`${EventType.PageView} ${locationPath}`, {
+        path: locationPath,
+        timestamp: Date.now(),
+      });
+    }
+
+    // Store original methods
+    const originalClose = webApp.close;
+    const originalSwitchInlineQuery = webApp.switchInlineQuery;
+    const originalOpenInvoice = webApp.openInvoice;
+    const originalShareToStory = webApp.shareToStory;
+
+    webApp.close = () => {
+      eventBuilder.track(EventType.SessionEnd, {
+        timestamp: Date.now(),
+        platform: webApp.platform,
+        version: webApp.version,
+        colorScheme: webApp.colorScheme,
+        viewportHeight: webApp.viewportHeight,
+        viewportStableHeight: webApp.viewportStableHeight,
+        isExpanded: webApp.isExpanded,
+      });
+
+      // Tiny delay to ensure event gets sent
+      setTimeout(() => {
+        originalClose.call(webApp);
+      }, 50);
+    };
+
+    webApp.switchInlineQuery = (
+      query: string,
+      chat_types?: Array<'users' | 'bots' | 'groups' | 'channels'>,
+    ) => {
+      // Track the event with query and chat_types data
+      eventBuilder.track(`${EventType.SwitchInlineQuery}: ${query}`, {
+        query: query,
+        chat_types: chat_types || [],
+        timestamp: Date.now(),
+      });
+
+      // Call original method
+      return originalSwitchInlineQuery.call(webApp, query, chat_types);
+    };
+
+    webApp.openInvoice = (url: string) => {
+      const slug = url.split('/').pop() || '';
+
+      eventBuilder.track(`${EventType.InvoiceOpened}: ${slug}`, {
+        url: url,
+        slug: slug,
+        timestamp: Date.now(),
+      });
+
+      return originalOpenInvoice.call(webApp, url);
+    };
+
+    let lastViewportHeight = webApp.viewportHeight;
+    let isCurrentlyExpanded = false;
+
+    const viewportChangeHandler = (event: { isStateStable: boolean }) => {
+      // Fullscreen tracking only
+      const heightIncreased = webApp.viewportHeight > lastViewportHeight;
+
+      if (heightIncreased && !isCurrentlyExpanded) {
+        isCurrentlyExpanded = true;
+        eventBuilder.track(EventType.WebAppRequestFullscreen, {
+          timestamp: Date.now(),
+          isStateStable: event.isStateStable,
+          previousViewportHeight: lastViewportHeight,
+          newViewportHeight: webApp.viewportHeight,
+          viewportStableHeight: webApp.viewportStableHeight,
+        });
+      } else if (!heightIncreased && isCurrentlyExpanded) {
+        isCurrentlyExpanded = false;
+        eventBuilder.track(EventType.WebAppExitFullscreen, {
+          timestamp: Date.now(),
+          isStateStable: event.isStateStable,
+          previousViewportHeight: lastViewportHeight,
+          newViewportHeight: webApp.viewportHeight,
+          viewportStableHeight: webApp.viewportStableHeight,
+        });
+      }
+
+      lastViewportHeight = webApp.viewportHeight;
+    };
+
+    webApp.onEvent('viewportChanged', viewportChangeHandler);
+
+    webApp.shareToStory = (media_url: string, params?: { text?: string }) => {
+      eventBuilder.track(`${EventType.ShareToStory}: ${media_url}`, {
+        media_url: media_url,
+        text: params?.text,
+        timestamp: Date.now(),
+      });
+
+      return originalShareToStory.call(webApp, media_url, params);
+    };
+  }
 
   const locationPath = location.pathname;
   eventBuilder.track(`${EventType.PageView} ${locationPath}`, {
