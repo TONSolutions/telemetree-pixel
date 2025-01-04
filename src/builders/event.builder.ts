@@ -89,31 +89,53 @@ export class EventBuilder implements IEventBuilder {
       const trackTags = config.auto_capture_tags.map((tag: string) =>
         tag.toUpperCase(),
       );
+
       document.querySelector('body')?.addEventListener('click', (event) => {
-        const target = event.target as HTMLElement;
-        const customProperties = {} as any;
-        const resolveAttributes = [
-          'id',
-          'href',
-          'class',
-          'name',
-          'value',
-          'type',
-          'placeholder',
-          'title',
-          'alt',
-          'src',
-        ];
-        if (target && trackTags.includes(target.tagName)) {
+        // Get the event path/composedPath (all elements in the click path)
+        const path = event.composedPath?.() || [];
+
+        // Find the first trackable element in the event path
+        const trackableElement = path.find((element: any) =>
+          element instanceof HTMLElement && trackTags.includes(element.tagName)
+        ) as HTMLElement | undefined;
+
+        if (trackableElement) {
+          const customProperties = {} as any;
+          const resolveAttributes = [
+            'id',
+            'href',
+            'class',
+            'name',
+            'value',
+            'type',
+            'placeholder',
+            'title',
+            'alt',
+            'src',
+          ];
+
           for (const attribute of resolveAttributes) {
-            if (target.hasAttribute(attribute)) {
-              customProperties[attribute] = target.getAttribute(attribute);
+            if (trackableElement.hasAttribute(attribute)) {
+              customProperties[attribute] = trackableElement.getAttribute(attribute);
             }
           }
-          customProperties['text'] = target.innerText;
-          customProperties['tag'] = target.tagName.toLowerCase();
+
+          // Get the most relevant text content
+          const targetText = (event.target as HTMLElement)?.innerText?.trim() || '';
+          const elementText = trackableElement.innerText?.trim() || '';
+
+          // Prefer the more specific text if available
+          customProperties['text'] = targetText || elementText;
+          customProperties['tag'] = trackableElement.tagName.toLowerCase();
+
+          // Add information about nested click if applicable
+          if (event.target !== trackableElement) {
+            customProperties['clicked_child'] = (event.target as HTMLElement)?.tagName?.toLowerCase();
+            customProperties['clicked_child_text'] = targetText;
+          }
+
           this.track(
-            `${DEFAULT_SYSTEM_EVENT_PREFIX} ${EventType.Click}${DEFAULT_SYSTEM_EVENT_DATA_SEPRARTOR}${target.innerText}`,
+            `${DEFAULT_SYSTEM_EVENT_PREFIX} ${EventType.Click}${DEFAULT_SYSTEM_EVENT_DATA_SEPRARTOR}${customProperties['text']}`,
             customProperties,
           );
         }
