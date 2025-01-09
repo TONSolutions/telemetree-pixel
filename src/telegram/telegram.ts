@@ -60,6 +60,6 @@ export const loadFromHash = (): TelegramWebAppData => {
       ? parseInt(urlParams.get('auth_date') as string)
       : 0,
     hash: urlParams.get('hash') || '',
-    start_param: urlParams.get('start_param') || undefined,
+    start_param: urlParams.get('start_param') || urlParams.get('startapp') || undefined,
   };
 };
