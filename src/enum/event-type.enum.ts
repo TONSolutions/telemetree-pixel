@@ -6,6 +6,7 @@ export enum EventType {
   MainButtonPressed = 'MainButtonPressed',
   SettingsButtonPressed = 'SettingsButtonPressed',
   InvoiceClosed = 'InvoiceClosed',
+  InvoiceOpened = 'Invoice opened',
   PopupClosed = 'PopupClosed',
   ClipboardTextReceived = 'ClipboardTextReceived',
   WriteAccessRequested = 'WriteAccessRequested',
