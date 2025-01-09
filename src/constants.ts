@@ -1,5 +1,5 @@
 export const CONFIG_API_GATEWAY =
-  'https://config.ton.solutions/v1/client/config';
+  'https://ebn.telemetree.io/public-api/v1/client/config';
 export const API_GATEWAY_REQUEST_TIMEOUT = 10000;
 
 export const DEFAULT_SYSTEM_EVENT_PREFIX = '[TS]';
