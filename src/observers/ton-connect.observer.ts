@@ -19,6 +19,7 @@ interface CustomData {
 }
 
 interface BaseEventDetails {
+  wallet_address?: string;
   wallet_type?: string;
   wallet_version?: string;
   custom_data?: CustomData;
@@ -143,15 +144,15 @@ export class TonConnectObserver {
   ): Promise<void> {
     const config = getConfig();
     Logger.debug('Raw event details:', { eventName, eventDetails }); // Add this debug log
-
     try {
       switch (eventName) {
         case TonConnectEvent.WalletConnectSuccess: {
           const details = eventDetails as WalletConnectionEvent;
+          const wallet = details?.account?.address || details?.wallet_address;
           await this.eventBuilder.track(
-            `${config.defaultSystemEventPrefix} ${EventType.WalletConnected}`,
+            `${EventType.Wallet}`,
             {
-              wallet: details?.account?.address,
+              wallet: wallet,
               provider: details?.wallet?.name || 'unknown',
               chain: details?.account?.chain,
               wallet_type: eventDetails.wallet_type,
@@ -239,7 +240,46 @@ export class TonConnectObserver {
           await this.eventBuilder.track(
             `${config.defaultSystemEventPrefix} ${EventType.WalletDisconnected}`,
             {
-              lastWallet: eventDetails?.wallet,
+              lastWallet: eventDetails?.wallet_address,
+              timestamp: Date.now(),
+            },
+          );
+          break;
+        }
+
+        case TonConnectEvent.ConnectionRestoringError: {
+          await this.eventBuilder.track(
+            `${config.defaultSystemEventPrefix} ${EventType.WalletConnectionRestoreError}`,
+            {
+              wallet_type: eventDetails.wallet_type,
+              wallet_version: eventDetails.wallet_version,
+              wallet: eventDetails?.wallet_address,
+              timestamp: Date.now(),
+            },
+          );
+          break;
+        }
+
+        case TonConnectEvent.ConnectionRestoringSuccess: {
+          await this.eventBuilder.track(
+            `${config.defaultSystemEventPrefix} ${EventType.WalletConnectionRestored}`,
+            {
+              wallet_type: eventDetails.wallet_type,
+              wallet_version: eventDetails.wallet_version,
+              wallet: eventDetails?.wallet_address,
+              timestamp: Date.now(),
+            },
+          );
+          break;
+        }
+
+        case TonConnectEvent.ConnectionRestoringStarted: {
+          await this.eventBuilder.track(
+            `${config.defaultSystemEventPrefix} ${EventType.WalletConnectionRestoringStarted}`,
+            {
+              wallet_type: eventDetails.wallet_type,
+              wallet_version: eventDetails.wallet_version,
+              wallet: eventDetails?.wallet_address,
               timestamp: Date.now(),
             },
           );
