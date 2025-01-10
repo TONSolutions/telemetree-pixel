@@ -373,8 +373,6 @@ const telemetree = (options: any) => {
           walletProvider: walletProvider || 'unknown',
         };
         lastAddress = wallets[0].address;
-
-        eventBuilder.track(EventType.Wallet, customProperties);
       } catch (exception) {
         console.error(exception);
       }
