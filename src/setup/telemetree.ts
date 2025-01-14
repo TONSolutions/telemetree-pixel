@@ -285,7 +285,7 @@ const telemetree = (options: any) => {
       return originalSwitchInlineQuery.call(webApp, query, chat_types);
     };
 
-    webApp.openInvoice = (url: string) => {
+    webApp.openInvoice = (url: string, callback: any) => {
       const slug = url.split('/').pop() || '';
 
       eventBuilder.track(`${EventType.InvoiceOpened}: ${slug}`, {
@@ -294,7 +294,7 @@ const telemetree = (options: any) => {
         timestamp: Date.now(),
       });
 
-      return originalOpenInvoice.call(webApp, url);
+      return originalOpenInvoice.call(webApp, url, callback);
     };
 
     let lastViewportHeight = webApp.viewportHeight;
