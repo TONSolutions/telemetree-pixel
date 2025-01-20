@@ -16,6 +16,7 @@ import { TelegramWebAppData } from '../models';
 import { TransportFactory } from '../transports/transport-factory';
 import { BaseEvent, Transport } from '../types';
 import { createEvent } from '../utils/create-event';
+import {Logger} from "../utils/logger";
 
 export class EventBuilder implements IEventBuilder {
   protected transport: Transport | null = null;
@@ -198,7 +199,7 @@ export class EventBuilder implements IEventBuilder {
 
   public async processEvent(event: BaseEvent): Promise<void> {
     if (this.config === null || this.transport === null) {
-      console;
+      Logger.info('Event processing failed: config or transport is not set.');
       return;
     }
 
@@ -217,6 +218,9 @@ export class EventBuilder implements IEventBuilder {
           body: encryptedBody,
         }),
       );
+      Logger.debug('Event sent successfully', {
+        eventData: event,
+      });
     } catch (exception: any) {
       console.error(exception);
     }
