@@ -1,13 +1,13 @@
-import { EventBuilder } from '../builders';
-import { loadTelegramWebAppData, webViewHandler } from '../telegram/telegram';
-import { TonConnectStorageData } from '../models/tonconnect-storage-data';
-import { EventType } from '../enum/event-type.enum';
-import { getCurrentUTCTimestampMilliseconds } from '../helpers/date.helper';
-import { getLocalStorage, setLocalStorage } from '../utils/local-storage';
-import { generateRandomId } from '../utils/id';
+import {EventBuilder} from '../builders';
+import {loadTelegramWebAppData, webViewHandler} from '../telegram/telegram';
+import {TonConnectStorageData} from '../models/tonconnect-storage-data';
+import {EventType} from '../enum/event-type.enum';
+import {getCurrentUTCTimestampMilliseconds} from '../helpers/date.helper';
+import {getLocalStorage, setLocalStorage} from '../utils/local-storage';
+import {generateRandomId} from '../utils/id';
 import {TonConnectObserver} from "../observers/ton-connect.observer";
-import {Logger} from "../utils/logger";
-import { Telegram } from '../telegram';
+import {Logger, LogLevel} from "../utils/logger";
+import {Telegram} from '../telegram';
 
 const TonConnectLocalStorageKey = 'ton-connect-storage_bridge-connection';
 const TonConnectProviderNameLocalStorageKey = 'ton-connect-ui_preferred-wallet';
@@ -31,6 +31,8 @@ declare global {
 }
 
 const telemetree = (options: any) => {
+  Logger.setLevel(options.logLevel || LogLevel.INFO);
+
   if (!options.projectId) {
     throw new Error('TWA Analytics Provider: Missing projectId');
   }
