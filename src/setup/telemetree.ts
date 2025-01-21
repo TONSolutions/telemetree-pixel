@@ -33,6 +33,7 @@ declare global {
 
 const telemetree = (options: any) => {
   Logger.setLevel(options.logLevel || LogLevel.INFO);
+  const trackGroup = options.trackGroup !== undefined ? options.trackGroup : TrackGroups.MEDIUM;
 
   if (!options.projectId) {
     throw new Error('TWA Analytics Provider: Missing projectId');
@@ -62,7 +63,7 @@ const telemetree = (options: any) => {
         },
         platform: 'web',
       },
-      options.trackGroup,
+      trackGroup,
     );
   } else {
     const telegramWebAppData = loadTelegramWebAppData();
@@ -70,22 +71,22 @@ const telemetree = (options: any) => {
       options.projectId,
       options.apiKey,
       telegramWebAppData,
-      options.trackGroup,
+      trackGroup,
     );
   }
 
-  if (options.trackGroup) {
+  if (trackGroup) {
     const webApp = window?.Telegram?.WebApp;
 
-    if (options.trackGroup === TrackGroups.LOW) {
+    if (trackGroup === TrackGroups.LOW) {
       trackGroupLow(eventBuilder, webApp);
     }
 
-    if (options.trackGroup === TrackGroups.MEDIUM) {
+    if (trackGroup === TrackGroups.MEDIUM) {
       trackGroupMedium(eventBuilder, webApp);
     }
 
-    if (options.trackGroup === TrackGroups.HIGH) {
+    if (trackGroup === TrackGroups.HIGH) {
       trackGroupHigh(eventBuilder, webApp);
     }
 
@@ -125,7 +126,7 @@ const telemetree = (options: any) => {
 
     let observer: TonConnectObserver | null = null;
 
-    if (options.trackGroup) {
+    if (trackGroup) {
       try {
         observer = new TonConnectObserver(eventBuilder);
         Logger.info('TON Connect observer initialized successfully');
