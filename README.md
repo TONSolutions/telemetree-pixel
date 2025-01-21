@@ -28,7 +28,6 @@ And inside the `<body>` initialise Telemetree with your credentials like so:
     const telemetreeBuilder = telemetree({
         projectId: "YOUR_PROJECT_ID",
         apiKey: "YOUR_API_KEY",
-        appName: "YOUR_APPLICATION_NAME",
         isTelegramContext: true, // use false, if a website is not in Telegram Web App context
         logLevel: 'debug' // set log level to debug if you need to. Default is info. (options: error, warn, info, debug)
     });
