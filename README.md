@@ -100,6 +100,8 @@ All in Low group
 ```
 All in Medium group
 
+Web app events:
+
 - MainButtonPressed
 
 - SettingsButtonPressed
@@ -163,6 +165,19 @@ All in Medium group
 - Fullscreen off
 
 - Story shared (webApp.shareStory)
+
+TON connect events:
+- Transaction sent for signature
+
+- Transaction signing failed
+
+- Wallet disconnected
+
+- Wallet connection restore error
+
+- Wallet connection restored
+
+- Wallet connection restoring started
 
 ```
 
