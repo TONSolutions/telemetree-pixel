@@ -54,11 +54,6 @@ const trackGroupLow = (eventBuilder: EventBuilder, webApp?: Telegram.WebApp) => 
       return originalOpenInvoice.call(webApp, url, callback);
     };
   }
-
-  const locationPath = location.pathname;
-  eventBuilder.track(`${EventType.PageView} ${locationPath}`, {
-    path: locationPath,
-  });
 }
 
 const trackGroupMedium = (eventBuilder: EventBuilder, webApp?: Telegram.WebApp) => {
