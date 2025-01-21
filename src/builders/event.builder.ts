@@ -90,7 +90,7 @@ export class EventBuilder implements IEventBuilder {
   protected setupAutoCaptureListener(): void {
     const config = this.getConfig();
 
-    if (config !== null && config.auto_capture === true && this.trackGroup == TrackGroups.MEDIUM) {
+    if (config !== null && config.auto_capture === true && (this.trackGroup == TrackGroups.MEDIUM || this.trackGroup == TrackGroups.HIGH)) {
       const trackTags = config.auto_capture_tags.map((tag: string) =>
         tag.toUpperCase(),
       );
