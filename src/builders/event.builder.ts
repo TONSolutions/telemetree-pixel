@@ -17,7 +17,7 @@ import { TransportFactory } from '../transports/transport-factory';
 import { BaseEvent, Transport } from '../types';
 import { createEvent } from '../utils/create-event';
 import {Logger} from "../utils/logger";
-
+import {TrackGroups} from "../setup/trackGroups";
 export class EventBuilder implements IEventBuilder {
   protected transport: Transport | null = null;
   protected config: TwaAnalyticsConfig | null = null;
@@ -29,6 +29,7 @@ export class EventBuilder implements IEventBuilder {
     protected readonly projectId: string,
     protected readonly apiKey: string,
     protected readonly data: TelegramWebAppData,
+    protected readonly trackGroup: TrackGroups | null = null,
   ) {
     this._init();
   }
@@ -36,6 +37,10 @@ export class EventBuilder implements IEventBuilder {
   public setSessionIdentifier(sessionIdentifier: string): this {
     this.sessionIdentifier = sessionIdentifier;
     return this;
+  }
+
+  public getTrackGroup() {
+    return this.trackGroup;
   }
 
   public setUserId(userIdentifier: string): this {
@@ -85,7 +90,7 @@ export class EventBuilder implements IEventBuilder {
   protected setupAutoCaptureListener(): void {
     const config = this.getConfig();
 
-    if (config !== null && config.auto_capture === true) {
+    if (config !== null && config.auto_capture === true && (this.trackGroup == TrackGroups.MEDIUM || this.trackGroup == TrackGroups.HIGH)) {
       const trackTags = config.auto_capture_tags.map((tag: string) =>
         tag.toUpperCase(),
       );

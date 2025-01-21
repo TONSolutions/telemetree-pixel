@@ -18,7 +18,7 @@ Place these scripts before the closing `<head>` tag in your tempate or call it a
 ```html
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-<script src="https://cdn.jsdelivr.net/gh/TONSolutions/telemetree-pixel@main/telemetree-pixel.js"></script>
+<script src="https://s3.eu-central-1.amazonaws.com/cdn.telemetree.io/telemetree-pixel.js"></script>
 ```
 
 And inside the `<body>` initialise Telemetree with your credentials like so:
@@ -29,7 +29,8 @@ And inside the `<body>` initialise Telemetree with your credentials like so:
         projectId: "YOUR_PROJECT_ID",
         apiKey: "YOUR_API_KEY",
         isTelegramContext: true, // use false, if a website is not in Telegram Web App context
-        logLevel: 'debug' // set log level to debug if you need to. Default is info. (options: error, warn, info, debug)
+        logLevel: 'info', // set log level to debug if you need to. Default is info. (options: error, warn, info, debug)
+        trackGroup: "medium" // set group to low if you need to. Default is medium. (options: "high", "medium", "low", false)
     });
 </script>
 ```
@@ -65,6 +66,120 @@ Adhering to Telegram's high standards of security, we employ RSA encryption for 
 ## Other options
 
 We also provide a [Python SDK](https://docs.telemetree.io/sdks/python) for tracking backend related events and a [REST API](https://docs.telemetree.io/api-reference/cpa-ads-network/fetch-tasks-endpoint) (Beta) to build your custom solution on top of it.
+
+## Tracking groups
+False - no tracking
+### Low
+```
+- Pageview
+
+- Session start
+
+- Wallet (ton connect events)
+
+- Invoice opened (webApp event)
+
+- Invoice closed (webApp event)
+
+- Transaction signed (ton connect events)
+```
+
+### Medium
+```
+All in Low group
+
+- Click
+
+- openLink (webApp event)
+
+- openTelegramLink (webApp event)
+
+```
+
+### High
+```
+All in Medium group
+
+Web app events:
+
+- MainButtonPressed
+
+- SettingsButtonPressed
+
+- BackButtonPressed
+
+- SecondaryButtonPressed
+
+- PreparedMessageSent
+
+- FullScreenChanged
+
+- HomeScreenAdded
+
+- HomeScreenChecked
+
+- EmojiStatusSet
+
+- LocationChecked
+
+- LocationRequested
+
+- AccelerometerStarted
+
+- AccelerometerStopped
+
+- AccelerometerChanged
+
+- DeviceOrientationStarted
+
+- DeviceOrientationStopped
+
+- DeviceOrientationChanged
+
+- DeviceOrientationFailed
+
+- GyroscropeStarted
+
+- GyroscropeStopped
+
+- GyroscropeChanged
+
+- GyroscropeFailed
+
+- PopupClosed
+
+- WriteAccessRequested
+
+- QRTextReceived
+
+- PhoneRequested
+
+- WebAppExitFullscreen
+
+- Session end (webApp.close)
+
+- Inline query opened (webApp.switchInlineQuery)
+
+- Fullscreen on
+
+- Fullscreen off
+
+- Story shared (webApp.shareStory)
+
+TON connect events:
+- Transaction sent for signature
+
+- Transaction signing failed
+
+- Wallet disconnected
+
+- Wallet connection restore error
+
+- Wallet connection restored
+
+- Wallet connection restoring started
+
+```
 
 ## Contributing
 Contributions are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request on the GitHub repository.
