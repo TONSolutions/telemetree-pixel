@@ -48,7 +48,6 @@ const telemetree = (options: any) => {
     eventBuilder = new EventBuilder(
       options.projectId,
       options.apiKey,
-      options.appName,
       {
         auth_date: +getCurrentUTCTimestampMilliseconds(),
         hash: '',
@@ -68,7 +67,6 @@ const telemetree = (options: any) => {
     eventBuilder = new EventBuilder(
       options.projectId,
       options.apiKey,
-      options.appName,
       telegramWebAppData,
     );
   }
