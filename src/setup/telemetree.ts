@@ -252,6 +252,8 @@ const telemetree = (options: any) => {
     const originalSwitchInlineQuery = webApp.switchInlineQuery;
     const originalOpenInvoice = webApp.openInvoice;
     const originalShareToStory = webApp.shareToStory;
+    const originalOpenLink = webApp.openLink;
+    const originalOpenTelegramLink = webApp.openTelegramLink;
 
     webApp.close = () => {
       eventBuilder.track(EventType.SessionEnd, {
@@ -337,6 +339,26 @@ const telemetree = (options: any) => {
       });
 
       return originalShareToStory.call(webApp, media_url, params);
+    };
+
+    webApp.openLink = (url: string, options?: any) => {
+      eventBuilder.track(`${EventType.OpenLink}: ${url}`, {
+        url: url,
+        options: options,
+        timestamp: Date.now(),
+      });
+
+      return originalOpenLink.call(webApp, url, options);
+    };
+
+    webApp.openTelegramLink = (url: string, options?: any) => {
+      eventBuilder.track(`${EventType.OpenTgLink}: ${url}`, {
+        url: url,
+        options: options,
+        timestamp: Date.now(),
+      });
+
+      return originalOpenTelegramLink.call(webApp, url, options);
     };
   }
 
