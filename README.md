@@ -29,7 +29,8 @@ And inside the `<body>` initialise Telemetree with your credentials like so:
         projectId: "YOUR_PROJECT_ID",
         apiKey: "YOUR_API_KEY",
         isTelegramContext: true, // use false, if a website is not in Telegram Web App context
-        logLevel: 'debug' // set log level to debug if you need to. Default is info. (options: error, warn, info, debug)
+        logLevel: 'debug', // set log level to debug if you need to. Default is info. (options: error, warn, info, debug)
+        trackGroup: "low" // set group to low if you need to. Default is false. (options: high, low, medium)
     });
 </script>
 ```
