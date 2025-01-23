@@ -30,7 +30,7 @@ And inside the `<body>` initialise Telemetree with your credentials like so:
         apiKey: "YOUR_API_KEY",
         isTelegramContext: true, // use false, if a website is not in Telegram Web App context
         logLevel: 'info', // set log level to debug if you need to. Default is info. (options: error, warn, info, debug)
-        trackGroup: "medium" // set group to low if you need to. Default is medium. (options: "high", "medium", "low", false)
+        trackGroup: "high" // set group to low if you need to. Default is high. (options: "high", "medium", "low", false)
     });
 </script>
 ```
