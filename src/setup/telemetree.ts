@@ -33,7 +33,7 @@ declare global {
 
 const telemetree = (options: any) => {
   Logger.setLevel(options.logLevel || LogLevel.INFO);
-  const trackGroup = options.trackGroup !== undefined ? options.trackGroup : TrackGroups.MEDIUM;
+  const trackGroup = options.trackGroup !== undefined ? options.trackGroup : TrackGroups.HIGH;
 
   if (!options.projectId) {
     throw new Error('TWA Analytics Provider: Missing projectId');
