@@ -172,6 +172,18 @@ export class EventBuilder implements IEventBuilder {
       return;
     }
 
+    const queryString = window.location.search;
+
+    const urlParams = new URLSearchParams(queryString);
+
+    const paramsObj: Record<string, string> = {};
+
+    for (const [key, value] of urlParams.entries()) {
+      paramsObj[key] = value;
+    }
+
+    const paramsString = Object.keys(paramsObj).length === 0 ? "" : JSON.stringify(paramsObj);
+
     const event = createEvent(
       eventName,
       {
@@ -182,7 +194,7 @@ export class EventBuilder implements IEventBuilder {
         writeAccess: this.data.user?.allows_write_to_pm || false,
       },
       {
-        startParameter: this.data.start_param || '',
+        startParameter: this.data.start_param || paramsString,
         path: document.location.pathname,
         params: eventProperties,
       },
