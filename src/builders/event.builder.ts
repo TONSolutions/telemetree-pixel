@@ -182,7 +182,7 @@ export class EventBuilder implements IEventBuilder {
       paramsObj[key] = value;
     }
 
-    const paramsString = Object.keys(paramsObj).length === 0 ? "" : JSON.stringify(paramsObj);
+    const paramsString = Object.keys(paramsObj).length === 0 ? "" : Object.keys(paramsObj).map(key => `${key}: ${paramsObj[key]}`).join(', ');;
 
     const event = createEvent(
       eventName,
